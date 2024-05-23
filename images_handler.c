@@ -105,18 +105,20 @@ void read_data()
 /* Load a single image from a specific location. */
 double* read_image_from_location(char* location, char label)
 {
-	/* Image reading. The dataset contains RGB images. These need to be copied to a single-channel buffer. */
-	uint8_t* tmp_rgb_image = stbi_load(location, &width, &height, &channels, 0);
+	/* Image reading. The dataset can contain RGB images. These need to be copied to a single-channel buffer. */
+	uint8_t* tmp_image = stbi_load(location, &width, &height, &channels, 0);
 	
 	/* Allocation of image. */
 	double* image = (double*)malloc((width * height + 1) * sizeof(double));
 	
-	/* Parsing of the three-channels image. */
 	for(int i = 0; i < width * height * channels; i++)
 	{
-		if(i % 3 == 0)
-		{
-			image[i / 3] = (double)tmp_rgb_image[i] / 255;
+		if (channels == 3) {
+		/* Parsing of the three-channels image. */
+			image[i / 3] = (double)tmp_image[i] / 255;
+		} else {
+		/* Single Channel image. */
+			image[i] = (double)tmp_image[i] / 255;
 		}
 	}
 
@@ -124,7 +126,7 @@ double* read_image_from_location(char* location, char label)
 	image[width * height] = (double)(label - '0');
 	
 	/* Deallocation of tmp_rgb_image. */
-	stbi_image_free(tmp_rgb_image);
+	stbi_image_free(tmp_image);
 	
 	/* Returning image. */
 	return image;
