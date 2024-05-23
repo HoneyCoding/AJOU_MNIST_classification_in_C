@@ -1,6 +1,8 @@
-*
+
 !LICENSE
 !README.md
 !*.c
 !*.h
 !Makefile
+MNIST_classification_in_C
+gmon.out
